@@ -1,12 +1,13 @@
 body, html {
       display: flex;
       justify-content: center;
-      border: 2px solid blue;
       width: 100%;
       height: 100%;
       padding: 0;
       margin: 0;
       align-items: center;
+      min-height: 600px;
+      min-width: 367px;
 }
 
 img {
@@ -16,21 +17,32 @@ img {
 
 div {
       display: flex;
-      border: 1px solid red;
 }
 
 .container {
       flex-direction: column;
-      width: 40vw;
-      height: 60vh;
-      max-width: 450px;
-      max-height: 600px;
-      min-width: 250px;
-      min-height: 425px;
+      height: 600px;
+      width: 367px;
+      border-radius: 1%;
+      border-color: black;
+      border-width: 10px;
+      border-style: solid;
 }
 
 .screen {
-      height: 10vh;
+      height: 97px;
+      justify-content: flex-end;
+      align-items: center;
+      font-size: 80px;
+      min-width: 250px;
+      padding: 4px;
+      border-color: black;
+      border-bottom-width: 6px;
+      border-style: solid;
+      margin: 0;
+      border-left-width: 0;
+      border-right-width: 0;
+      border-right-width: 0;
 }
 
 .buttons {
@@ -48,6 +60,8 @@ button {
       font-weight: 500;
       width: 100%;
       height: 100%;
+      border-color: black;
+      border-width: 3px;
 }
 
 .button {
