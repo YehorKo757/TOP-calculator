@@ -30,10 +30,8 @@ div {
 }
 
 .display {
+      flex-direction: column;
       height: 97px;
-      justify-content: flex-end;
-      align-items: center;
-      font-size: 80px;
       min-width: 250px;
       padding: 4px;
       border-color: black;
@@ -43,6 +41,27 @@ div {
       border-left-width: 0;
       border-right-width: 0;
       border-right-width: 0;
+}
+
+.display-up, .display-down {
+      display: flex;
+      justify-content: flex-end;
+      border: 2px solid red;
+      min-height: 20px;
+      min-width: 250px;
+      flex: 1 1 auto;
+      align-content: stretch;
+}
+
+.display-down{
+      align-items: center;
+      font-size: 45px;
+}
+
+.display-up {
+      padding: 0;
+      font-size: 25px;
+      color: gray;
 }
 
 .buttons {

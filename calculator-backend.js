@@ -1,18 +1,27 @@
+function precision(number, precisionNeeded) {
+      let coef = 10 ** precisionNeeded;
+      return Math.round(number * coef)/coef; 
+}
+
 function add(a, b) {
-      return parseFloat(a) + parseFloat(b);
+      result = parseFloat(a) + parseFloat(b); 
+      return precision(result, 12);
 }
 
 function subtract(a, b) {
-      return parseFloat(a) - parseFloat(b);
+      result = parseFloat(a) - parseFloat(b);
+      return precision(result, 12);
 }
 
 function multiply(a, b) {
-      return parseFloat(a) * parseFloat(b);
+      result = parseFloat(a) * parseFloat(b);
+      return precision(result, 12);
 }
 
 function divide(a, b) {
       if (b !== "0") {
-            return parseFloat(a) / parseFloat(b);
+            result = parseFloat(a) / parseFloat(b);
+            return precision(result, 12);
       } else {
             return "ZeroDivision error!"
       }
@@ -23,8 +32,10 @@ let firstNumber = "";
 let secondNumber = "";
 let operator = "";
 let result = "";
-let display = 0;
-let check = false;
+let displayUp = "";
+let displayDown = 0;
+let isOperatorAgain = false;
+let isOperatorBefore = false;
 
 function operate(operator, firstNumber, secondNumber) {
       switch(operator) {
@@ -47,24 +58,40 @@ function operate(operator, firstNumber, secondNumber) {
       }
 }
 
-let displayItem = document.querySelector(".display");
-displayItem.textContent = display;
+let displayDownItem = document.querySelector(".display-down");
+let displayUpItem = document.querySelector(".display-up");
+displayDownItem.textContent = displayDown;
+displayUpItem.textContent = displayUp;
 
-function populateDisplay(buttonValue){
-      if (displayItem.textContent.length < 9) {
-            if (display == "0") {
-                  display = buttonValue;
-                  displayItem.textContent = display;
+function populateDisplayDown(buttonValue){
+      if (displayDownItem.textContent.length < 15) {
+            if (displayDown == "0") {
+                  displayDown = buttonValue;
+                  displayDownItem.textContent = displayDown;
             } else {
-                  displayItem.textContent = displayItem.textContent.concat(buttonValue);
-                  display = buttonValue;
+                   displayDown = displayDownItem.textContent.concat(buttonValue);
+                   displayDownItem.textContent = displayDown;
             }
       }
 }
 
-function clearDisplay() {
-      display = "";
-      displayItem.textContent = display;
+function clearDisplayDown() {
+      displayDown = "";
+      displayDownItem.textContent = displayDown;
+}
+function clearDisplayUp() {
+      displayUp = "";
+      displayUpItem.textContent = displayUp;
+}
+
+function clearAll() {
+      clearDisplayDown();
+      clearDisplayUp();
+      firstNumber = "";
+      secondNumber = "";
+      operator = "";
+      result = "";
+      isOperatorAgain = false;
 }
 
 function operatorToSign(operator) {
@@ -86,53 +113,81 @@ function operatorToSign(operator) {
 
 let buttons = document.querySelector(".buttons");
 buttons.addEventListener("click", (event) => {
-
+      console.log(event.target.parentElement);
       if (event.target.parentElement.classList.contains("number")) {
             let buttonValue = event.target.parentElement.id;
-            if (check == false) {
-                  populateDisplay(buttonValue);
+            if (isOperatorBefore == false) {
+                  populateDisplayDown(buttonValue);
             } else {
-                  clearDisplay();
-                  check = false;
-                  populateDisplay(buttonValue);
+                  clearDisplayDown();
+                  isOperatorAgain = false;
+                  populateDisplayDown(buttonValue);
+                  isOperatorBefore = false;
             }
             
       } 
       // This one to make "back" button work when clicking on image as well. Image is child of button, that is child of div with target class.
       else if (event.target.parentElement.id == "back" || event.target.parentElement.parentElement.id == "back") {
-            display = display.slice(0, -1);
-            displayItem.textContent = display;
+            displayDown = displayDown.slice(0, -1);
+            displayDownItem.textContent = displayDown;
       } 
       
       else if (event.target.parentElement.classList.contains("operation") && event.target.parentElement.id !== 'equal') {
             if (firstNumber == "") {
-                  firstNumber = display;
+                  isOperatorBefore = true;
+                  firstNumber = displayDownItem.textContent;
                   operator = event.target.parentElement.id;
-                  displayItem.textContent = display + operatorToSign(operator);
+                  displayUpItem.textContent = displayDownItem.textContent + operatorToSign(operator);
+                  //clearDisplayDown();
+
                   console.log("event: 1");
-                  console.log(display);
-                  console.log(firstNumber);
-                  console.log(secondNumber);
-                  console.log(operator);
-                  console.log(check);
-            } else {
-                  secondNumber = display;
-                  check = true;
+                  console.log(`displayDown: ${displayDown}`);
+                  console.log(`firstNumber: ${firstNumber}`);
+                  console.log(`secondNumber: ${secondNumber}`);
+                  console.log(`operator: ${operator}`);
+                  console.log(`isOperatorAgain: ${isOperatorAgain}`);
+
+            } else if (!isOperatorAgain) {
+                  isOperatorBefore = true;
+                  secondNumber = displayDown;
+                  isOperatorAgain = true;
+
                   console.log("event: 2a");
-                  console.log(display);
-                  console.log(firstNumber);
-                  console.log(secondNumber);
-                  console.log(operator);   
-                  firstNumber = operate(operator, firstNumber, secondNumber);
-                  display = firstNumber;
-                  secondNumber = "";
+                  console.log(`displayDown: ${displayDown}`);
+                  console.log(`firstNumber: ${firstNumber}`);
+                  console.log(`secondNumber: ${secondNumber}`);
+                  console.log(`operator: ${operator}`);
+                  console.log(`isOperatorAgain: ${isOperatorAgain}`);
+
+                  firstNumber = String(operate(operator, firstNumber, secondNumber));
                   operator = event.target.parentElement.id;
-                  displayItem.textContent = display + operatorToSign(operator);
+                  displayUp = firstNumber.concat(operatorToSign(operator));
+                  displayUpItem.textContent = displayUp;
+                  secondNumber = "";
+                  displayDown = firstNumber;
+                  displayDownItem.textContent = displayDown;
+                  
                   console.log("event: 2b");
-                  console.log(display);
-                  console.log(firstNumber);
-                  console.log(secondNumber);
-                  console.log(operator);   
+                  console.log(`displayDown: ${displayDown}`);
+                  console.log(`firstNumber: ${firstNumber}`);
+                  console.log(`secondNumber: ${secondNumber}`);
+                  console.log(`operator: ${operator}`);
+                  console.log(`isOperatorAgain: ${isOperatorAgain}`);
+
+                  } else {
+                        isOperatorBefore = true;
+                        operator = event.target.parentElement.id;
+                        displayUp = displayUpItem.textContent.slice(0, -1).concat(operatorToSign(operator));
+                        displayUpItem.textContent = displayUp;
+                        console.log("event: 2c");
+                        console.log(`displayDown: ${displayDown}`);
+                        console.log(`firstNumber: ${firstNumber}`);
+                        console.log(`secondNumber: ${secondNumber}`);
+                        console.log(`operator: ${operator}`);
+                        console.log(`isOperatorAgain: ${isOperatorAgain}`);
                   }                     
+      }
+      else if (event.target.parentElement.id == 'AC') {
+            clearAll();
       }
 })
