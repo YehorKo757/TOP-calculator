@@ -130,12 +130,18 @@ buttons.addEventListener("click", (event) => {
       else if (event.target.parentElement.id == "back" || event.target.parentElement.parentElement.id == "back") {
             displayDown = displayDown.slice(0, -1);
             displayDownItem.textContent = displayDown;
+            isOperatorBefore = false;
+            isOperatorAgain = false;
       } 
       
       else if (event.target.parentElement.classList.contains("operation") && event.target.parentElement.id !== 'equal') {
             if (firstNumber == "") {
                   isOperatorBefore = true;
-                  firstNumber = displayDownItem.textContent;
+                  if (displayDownItem.textContent == "") {
+                        firstNumber = "0";
+                  } else {
+                        firstNumber = displayDownItem.textContent;
+                  }
                   operator = event.target.parentElement.id;
                   displayUpItem.textContent = displayDownItem.textContent + operatorToSign(operator);
                   //clearDisplayDown();
@@ -149,30 +155,31 @@ buttons.addEventListener("click", (event) => {
 
             } else if (!isOperatorAgain) {
                   isOperatorBefore = true;
-                  secondNumber = displayDown;
-                  isOperatorAgain = true;
+                  if (displayDown) {
+                        secondNumber = displayDown;
+                        isOperatorAgain = true;
 
-                  console.log("event: 2a");
-                  console.log(`displayDown: ${displayDown}`);
-                  console.log(`firstNumber: ${firstNumber}`);
-                  console.log(`secondNumber: ${secondNumber}`);
-                  console.log(`operator: ${operator}`);
-                  console.log(`isOperatorAgain: ${isOperatorAgain}`);
+                        console.log("event: 2a");
+                        console.log(`displayDown: ${displayDown}`);
+                        console.log(`firstNumber: ${firstNumber}`);
+                        console.log(`secondNumber: ${secondNumber}`);
+                        console.log(`operator: ${operator}`);
+                        console.log(`isOperatorAgain: ${isOperatorAgain}`);
 
-                  firstNumber = String(operate(operator, firstNumber, secondNumber));
-                  operator = event.target.parentElement.id;
-                  displayUp = firstNumber.concat(operatorToSign(operator));
-                  displayUpItem.textContent = displayUp;
-                  secondNumber = "";
-                  displayDown = firstNumber;
-                  displayDownItem.textContent = displayDown;
-                  
-                  console.log("event: 2b");
-                  console.log(`displayDown: ${displayDown}`);
-                  console.log(`firstNumber: ${firstNumber}`);
-                  console.log(`secondNumber: ${secondNumber}`);
-                  console.log(`operator: ${operator}`);
-                  console.log(`isOperatorAgain: ${isOperatorAgain}`);
+                        firstNumber = String(operate(operator, firstNumber, secondNumber));
+                        operator = event.target.parentElement.id;
+                        displayUp = firstNumber.concat(operatorToSign(operator));
+                        displayUpItem.textContent = displayUp;
+                        secondNumber = "";
+                        displayDown = firstNumber;
+                        displayDownItem.textContent = displayDown;
+                        
+                        console.log("event: 2b");
+                        console.log(`displayDown: ${displayDown}`);
+                        console.log(`firstNumber: ${firstNumber}`);
+                        console.log(`secondNumber: ${secondNumber}`);
+                        console.log(`operator: ${operator}`);
+                        console.log(`isOperatorAgain: ${isOperatorAgain}`);
 
                   } else {
                         isOperatorBefore = true;
@@ -186,6 +193,7 @@ buttons.addEventListener("click", (event) => {
                         console.log(`operator: ${operator}`);
                         console.log(`isOperatorAgain: ${isOperatorAgain}`);
                   }                     
+            }
       }
       else if (event.target.parentElement.id == 'AC') {
             clearAll();
