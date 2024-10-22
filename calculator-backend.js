@@ -213,6 +213,8 @@ buttons.addEventListener("click", (event) => {
       else if (event.target.parentElement.id == "plus-minus") {
             displayDown = displayDown * (-1);
             displayDownItem.textContent = displayDown;
+            isOperatorAgain = true;
+            isOperatorBefore = true;
       }
       else if (event.target.parentElement.id == "dot") {
             displayDown = `${displayDown}.`;
