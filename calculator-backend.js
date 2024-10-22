@@ -28,6 +28,7 @@ function divide(a, b) {
       
 }
 
+
 let firstNumber = "";
 let secondNumber = "";
 let operator = "";
@@ -36,22 +37,28 @@ let displayUp = "";
 let displayDown = "0";
 let isOperatorAgain = false;
 let isOperatorBefore = false;
+const operators = ["-", "+", "*", "/", "="];
+const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]; 
 
 function operate(operator, firstNumber, secondNumber) {
       switch(operator) {
             case "add":
+            case "+":
                   result = add(firstNumber, secondNumber);
                   return result;
                   break;
             case "subtract":
+            case "-":
                   result = subtract(firstNumber, secondNumber);
                   return result;
                   break;
             case "multiply":
+            case "*":
                   result = multiply(firstNumber, secondNumber);
                   return result;
                   break;
             case "divide":
+            case "/":
                   result = divide(firstNumber, secondNumber);
                   return result;
                   break;
@@ -100,15 +107,19 @@ function clearAll() {
 function operatorToSign(operator) {
       switch (operator) {
             case "add":
+            case "+":
                   return "+";
                   brake;
             case "subtract":
+            case "-":
                   return "-";
                   brake;
             case "multiply":
+            case "*":
                   return "*";
                   brake;
             case "divide":
+            case "/":
                   return "/";
                   brake;
       }
@@ -132,40 +143,55 @@ function whenEqual() {
       }
 }
 
-let buttons = document.querySelector(".buttons");
-buttons.addEventListener("click", (event) => {
-      console.log(event.target.parentElement);
-      if (event.target.parentElement.classList.contains("number") 
-            && event.target.parentElement.id !== "dot") {
-            let buttonValue = event.target.parentElement.id;
-            if (isOperatorBefore == false) {
-                  populateDisplayDown(buttonValue);
-            } else {
-                  clearDisplayDown();
-                  isOperatorAgain = false;
-                  populateDisplayDown(buttonValue);
-                  isOperatorBefore = false;
+function equalOperator() {
+      if (firstNumber && secondNumber) {
+            whenEqual();
+      } else if (firstNumber && !secondNumber) {
+            if (displayDown) {
+                  secondNumber = displayDown;
+                  whenEqual();
             }
-            if (!displayDownItem.textContent.includes(".")) {
-                  dotButton.disabled = false;
-            } else {
-                  dotButton.disabled = true;
-            }
-      } 
-      // This one to make "back" button work when clicking on image as well. Image is child of button, that is child of div with target class.
-      else if (event.target.parentElement.id == "back" 
-            || event.target.parentElement.parentElement.id == "back") {
-            if (displayDown.slice(-1) == ".") {
-                  dotButton.disabled = false;
-            }
-            displayDown = displayDown.slice(0, -1);
-            displayDownItem.textContent = displayDown;
-            isOperatorBefore = false;
+      }
+}
+
+function numberScenario(checkScenario, e) {
+      if (checkScenario == "display") {
+            let buttonValue = e.target.parentElement.id;
+            numberInput(buttonValue);
+      } else if (checkScenario == "keyboard") {
+            let buttonValue = e.key;
+            numberInput(buttonValue);
+      }
+}
+
+function numberInput(buttonValue) {
+      if (isOperatorBefore == false) {
+            populateDisplayDown(buttonValue);
+      } else {
+            clearDisplayDown();
             isOperatorAgain = false;
-      } 
-      
-      else if (event.target.parentElement.classList.contains("operation") 
-            && event.target.parentElement.id !== 'equal') {
+            populateDisplayDown(buttonValue);
+            isOperatorBefore = false;
+      }
+      if (!displayDownItem.textContent.includes(".")) {
+            dotButton.disabled = false;
+      } else {
+            dotButton.disabled = true;
+      }
+}
+
+function backspace() {
+      if (displayDown.slice(-1) == ".") {
+            dotButton.disabled = false;
+      }
+      displayDown = displayDown.slice(0, -1);
+      displayDownItem.textContent = displayDown;
+      isOperatorBefore = false;
+      isOperatorAgain = false;
+}
+
+function operatorInput(checkScenario, event) {
+      if (checkScenario == "display") {
             if (!displayDownItem.textContent.includes(".")) {
                   dotButton.disabled = false;
             } else {
@@ -180,7 +206,7 @@ buttons.addEventListener("click", (event) => {
                   }
                   operator = event.target.parentElement.id;
                   displayUpItem.textContent = firstNumber + operatorToSign(operator);
-
+      
             } else if (!isOperatorAgain) {
                   isOperatorBefore = true;
                   if (displayDown) {
@@ -204,35 +230,114 @@ buttons.addEventListener("click", (event) => {
                   displayUp = displayUpItem.textContent.slice(0, -1).concat(operatorToSign(operator));
                   displayUpItem.textContent = displayUp;
             }
+      } else if (checkScenario == "keyboard") {
+            if (!displayDownItem.textContent.includes(".")) {
+                  dotButton.disabled = false;
+            } else {
+                  dotButton.disabled = true;
+            }
+            if (firstNumber == "") {
+                  isOperatorBefore = true;
+                  if (displayDownItem.textContent == "") {
+                        firstNumber = "0";
+                  } else {
+                        firstNumber = displayDownItem.textContent;
+                  }
+                  operator = event.key;
+                  displayUpItem.textContent = `${firstNumber}${operator}`;
+      
+            } else if (!isOperatorAgain) {
+                  isOperatorBefore = true;
+                  if (displayDown) {
+                        secondNumber = displayDown;
+                        isOperatorAgain = true;
+                        firstNumber = String(operate(operator, firstNumber, secondNumber));
+                        operator = event.key;
+                        displayUp = firstNumber.concat(operator);
+                        displayUpItem.textContent = displayUp;
+                        secondNumber = "";
+                        displayDown = firstNumber;
+                        displayDownItem.textContent = displayDown;
+                  } else {
+                        isOperatorBefore = true;
+                        operator = event.key;
+                        displayUp = displayUpItem.textContent.slice(0, -1).concat(operator);
+                        displayUpItem.textContent = displayUp;
+                  }                     
+            } else {
+                  operator = event.key;
+                  displayUp = displayUpItem.textContent.slice(0, -1).concat(operator);
+                  displayUpItem.textContent = displayUp;
+            }
+      }
+}
+
+function plusMinus() {
+      displayDown = displayDown * (-1);
+      displayDownItem.textContent = displayDown;
+      isOperatorAgain = true;
+      isOperatorBefore = true;
+}
+
+let buttons = document.querySelector(".buttons");
+buttons.addEventListener("click", (event) => {
+      if (event.target.parentElement.classList.contains("number") 
+            && event.target.parentElement.id !== "dot") {
+            numberScenario("display", event);
+      } 
+      // This one to make "back" button work when clicking on image as well. Image is child of button, that is child of div with target class.
+      else if (event.target.parentElement.id == "back" 
+            || event.target.parentElement.parentElement.id == "back") {
+            backspace();
+      } 
+      
+      else if (event.target.parentElement.classList.contains("operation") 
+            && event.target.parentElement.id !== 'equal') {
+            operatorInput("display", event);
       }
       else if (event.target.parentElement.id == 'AC') {
             clearAll();
       }
       else if (event.target.parentElement.classList.contains("operation") 
             && event.target.parentElement.id == 'equal') {
-                  if (firstNumber && secondNumber) {
-                        whenEqual();
-                  } else if (firstNumber && !secondNumber) {
-                        if (displayDown) {
-                              secondNumber = displayDown;
-                              whenEqual();
-                        }
-                  }
+            equalOperator();
       }
       else if (event.target.parentElement.id == "percentage") {
             displayDown = precision(parseFloat(displayDownItem.textContent)/100, 12);
             displayDownItem.textContent = displayDown;
       }
       else if (event.target.parentElement.id == "plus-minus") {
-            displayDown = displayDown * (-1);
-            displayDownItem.textContent = displayDown;
-            isOperatorAgain = true;
-            isOperatorBefore = true;
+            plusMinus();
       }
       else if (event.target.parentElement.id == "dot") {
-            displayDown = `${displayDown}.`;
-            displayDownItem.textContent = displayDown;
-            event.target.disabled = true;
+            if (!displayDownItem.textContent.includes(".")) {
+                  displayDown = `${displayDown}.`;
+                  displayDownItem.textContent = displayDown;
+                  event.target.disabled = true;
+            }
       }
 
+})
+
+document.addEventListener("keydown", (event) => {
+      if (numbers.includes(event.key)) {
+            numberScenario("keyboard", event);
+      } else if (operators.includes(event.key)) {
+            if (event.key == "=") {
+                  equalOperator();
+            } else {
+                  operatorInput("keyboard", event);
+            }
+      } else if (event.key == "Backspace") {
+            backspace();
+      } else if (event.key == "%") {
+            displayDown = precision(parseFloat(displayDownItem.textContent)/100, 12);
+            displayDownItem.textContent = displayDown;
+      } else if (event.key == ".") {
+            if (!displayDownItem.textContent.includes(".")){
+                  displayDown = `${displayDown}.`;
+                  displayDownItem.textContent = displayDown;
+                  event.target.disabled = true;
+            }
+      }
 })
