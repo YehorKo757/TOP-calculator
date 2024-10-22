@@ -127,14 +127,16 @@ buttons.addEventListener("click", (event) => {
             
       } 
       // This one to make "back" button work when clicking on image as well. Image is child of button, that is child of div with target class.
-      else if (event.target.parentElement.id == "back" || event.target.parentElement.parentElement.id == "back") {
+      else if (event.target.parentElement.id == "back" 
+            || event.target.parentElement.parentElement.id == "back") {
             displayDown = displayDown.slice(0, -1);
             displayDownItem.textContent = displayDown;
             isOperatorBefore = false;
             isOperatorAgain = false;
       } 
       
-      else if (event.target.parentElement.classList.contains("operation") && event.target.parentElement.id !== 'equal') {
+      else if (event.target.parentElement.classList.contains("operation") 
+            && event.target.parentElement.id !== 'equal') {
             if (firstNumber == "") {
                   isOperatorBefore = true;
                   if (displayDownItem.textContent == "") {
@@ -186,6 +188,7 @@ buttons.addEventListener("click", (event) => {
                         operator = event.target.parentElement.id;
                         displayUp = displayUpItem.textContent.slice(0, -1).concat(operatorToSign(operator));
                         displayUpItem.textContent = displayUp;
+
                         console.log("event: 2c");
                         console.log(`displayDown: ${displayDown}`);
                         console.log(`firstNumber: ${firstNumber}`);
@@ -193,6 +196,17 @@ buttons.addEventListener("click", (event) => {
                         console.log(`operator: ${operator}`);
                         console.log(`isOperatorAgain: ${isOperatorAgain}`);
                   }                     
+            } else {
+                  operator = event.target.parentElement.id;
+                  displayUp = displayUpItem.textContent.slice(0, -1).concat(operatorToSign(operator));
+                  displayUpItem.textContent = displayUp;
+
+                  console.log("event: 2d");
+                  console.log(`displayDown: ${displayDown}`);
+                  console.log(`firstNumber: ${firstNumber}`);
+                  console.log(`secondNumber: ${secondNumber}`);
+                  console.log(`operator: ${operator}`);
+                  console.log(`isOperatorAgain: ${isOperatorAgain}`);
             }
       }
       else if (event.target.parentElement.id == 'AC') {
