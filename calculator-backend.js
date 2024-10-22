@@ -63,6 +63,8 @@ let displayUpItem = document.querySelector(".display-up");
 displayDownItem.textContent = displayDown;
 displayUpItem.textContent = displayUp;
 
+let dotButton = document.getElementById("dotButton");
+
 function populateDisplayDown(buttonValue){
       if (displayDownItem.textContent.length < 15) {
             if (displayDown == "0") {
@@ -92,6 +94,7 @@ function clearAll() {
       operator = "";
       result = "";
       isOperatorAgain = false;
+      dotButton.disabled = false;
 }
 
 function operatorToSign(operator) {
@@ -122,6 +125,7 @@ function whenEqual() {
       firstNumber = "";
       secondNumber = "";
       operator = "";
+      dotButton.disabled = false;
 }
 
 let buttons = document.querySelector(".buttons");
@@ -143,6 +147,9 @@ buttons.addEventListener("click", (event) => {
       // This one to make "back" button work when clicking on image as well. Image is child of button, that is child of div with target class.
       else if (event.target.parentElement.id == "back" 
             || event.target.parentElement.parentElement.id == "back") {
+            if (displayDown.slice(-1) == ".") {
+                  dotButton.disabled = false;
+            }
             displayDown = displayDown.slice(0, -1);
             displayDownItem.textContent = displayDown;
             isOperatorBefore = false;
@@ -160,28 +167,12 @@ buttons.addEventListener("click", (event) => {
                   }
                   operator = event.target.parentElement.id;
                   displayUpItem.textContent = firstNumber + operatorToSign(operator);
-                  //clearDisplayDown();
-
-                  console.log("event: 1");
-                  console.log(`displayDown: ${displayDown}`);
-                  console.log(`firstNumber: ${firstNumber}`);
-                  console.log(`secondNumber: ${secondNumber}`);
-                  console.log(`operator: ${operator}`);
-                  console.log(`isOperatorAgain: ${isOperatorAgain}`);
 
             } else if (!isOperatorAgain) {
                   isOperatorBefore = true;
                   if (displayDown) {
                         secondNumber = displayDown;
                         isOperatorAgain = true;
-
-                        console.log("event: 2a");
-                        console.log(`displayDown: ${displayDown}`);
-                        console.log(`firstNumber: ${firstNumber}`);
-                        console.log(`secondNumber: ${secondNumber}`);
-                        console.log(`operator: ${operator}`);
-                        console.log(`isOperatorAgain: ${isOperatorAgain}`);
-
                         firstNumber = String(operate(operator, firstNumber, secondNumber));
                         operator = event.target.parentElement.id;
                         displayUp = firstNumber.concat(operatorToSign(operator));
@@ -189,38 +180,16 @@ buttons.addEventListener("click", (event) => {
                         secondNumber = "";
                         displayDown = firstNumber;
                         displayDownItem.textContent = displayDown;
-                        
-                        console.log("event: 2b");
-                        console.log(`displayDown: ${displayDown}`);
-                        console.log(`firstNumber: ${firstNumber}`);
-                        console.log(`secondNumber: ${secondNumber}`);
-                        console.log(`operator: ${operator}`);
-                        console.log(`isOperatorAgain: ${isOperatorAgain}`);
-
                   } else {
                         isOperatorBefore = true;
                         operator = event.target.parentElement.id;
                         displayUp = displayUpItem.textContent.slice(0, -1).concat(operatorToSign(operator));
                         displayUpItem.textContent = displayUp;
-
-                        console.log("event: 2c");
-                        console.log(`displayDown: ${displayDown}`);
-                        console.log(`firstNumber: ${firstNumber}`);
-                        console.log(`secondNumber: ${secondNumber}`);
-                        console.log(`operator: ${operator}`);
-                        console.log(`isOperatorAgain: ${isOperatorAgain}`);
                   }                     
             } else {
                   operator = event.target.parentElement.id;
                   displayUp = displayUpItem.textContent.slice(0, -1).concat(operatorToSign(operator));
                   displayUpItem.textContent = displayUp;
-
-                  console.log("event: 2d");
-                  console.log(`displayDown: ${displayDown}`);
-                  console.log(`firstNumber: ${firstNumber}`);
-                  console.log(`secondNumber: ${secondNumber}`);
-                  console.log(`operator: ${operator}`);
-                  console.log(`isOperatorAgain: ${isOperatorAgain}`);
             }
       }
       else if (event.target.parentElement.id == 'AC') {
@@ -228,40 +197,27 @@ buttons.addEventListener("click", (event) => {
       }
       else if (event.target.parentElement.classList.contains("operation") 
             && event.target.parentElement.id == 'equal') {
-                  console.log("event: 3a");
-                  console.log(`displayDown: ${displayDown}`);
-                  console.log(`firstNumber: ${firstNumber}`);
-                  console.log(`secondNumber: ${secondNumber}`);
-                  console.log(`operator: ${operator}`);
-                  console.log(`isOperatorAgain: ${isOperatorAgain}`);
                   if (firstNumber && secondNumber) {
-                        console.log("event: 3b");
                         whenEqual();
                   } else if (firstNumber && !secondNumber) {
                         if (displayDown) {
-                              console.log("event: 3c");
                               secondNumber = displayDown;
                               whenEqual();
                         }
                   }
       }
       else if (event.target.parentElement.id == "percentage") {
-            console.log("event: 4");
-            console.log(`displayDown: ${displayDown}`);
-            console.log(`firstNumber: ${firstNumber}`);
-            console.log(`secondNumber: ${secondNumber}`);
-            console.log(`operator: ${operator}`);
-            console.log(`isOperatorAgain: ${isOperatorAgain}`);
             displayDown = precision(parseFloat(displayDownItem.textContent)/100, 12);
             displayDownItem.textContent = displayDown;
       }
       else if (event.target.parentElement.id == "plus-minus") {
-            // TODO
-            console.log("event 5");
+            displayDown = displayDown * (-1);
+            displayDownItem.textContent = displayDown;
       }
       else if (event.target.parentElement.id == "dot") {
-            // TODO
-            console.log("event 6");
+            displayDown = `${displayDown}.`;
+            displayDownItem.textContent = displayDown;
+            event.target.disabled = true;
       }
 
 })
