@@ -46,7 +46,6 @@ div {
 .display-up, .display-down {
       display: flex;
       justify-content: flex-end;
-      border: 2px solid red;
       min-height: 20px;
       min-width: 250px;
       flex: 1 1 auto;
@@ -85,4 +84,17 @@ button {
 
 .button {
       flex: 1;
+}
+
+.blue-button > button{
+      background-color: rgba(1, 67, 247, 0.445);
+}
+
+.operation > button{
+      background-color: rgba(247, 190, 1, 0.445);
+
+}
+
+.green-button > button, .number > button {
+      background-color: rgba(65, 172, 65, 0.445);
 }
