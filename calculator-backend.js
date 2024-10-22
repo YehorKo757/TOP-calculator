@@ -33,7 +33,7 @@ let secondNumber = "";
 let operator = "";
 let result = "";
 let displayUp = "";
-let displayDown = 0;
+let displayDown = "0";
 let isOperatorAgain = false;
 let isOperatorBefore = false;
 
@@ -111,10 +111,24 @@ function operatorToSign(operator) {
       }
 }
 
+function whenEqual() {
+      result = String(operate(operator, firstNumber, secondNumber));
+      displayDown = result;
+      displayDownItem.textContent = displayDown;
+      displayUp = `${firstNumber}${operatorToSign(operator)}${secondNumber}=`;
+      displayUpItem.textContent = displayUp;
+      isOperatorAgain = false;
+      isOperatorBefore = false;
+      firstNumber = "";
+      secondNumber = "";
+      operator = "";
+}
+
 let buttons = document.querySelector(".buttons");
 buttons.addEventListener("click", (event) => {
       console.log(event.target.parentElement);
-      if (event.target.parentElement.classList.contains("number")) {
+      if (event.target.parentElement.classList.contains("number") 
+            && event.target.parentElement.id !== "dot") {
             let buttonValue = event.target.parentElement.id;
             if (isOperatorBefore == false) {
                   populateDisplayDown(buttonValue);
@@ -145,7 +159,7 @@ buttons.addEventListener("click", (event) => {
                         firstNumber = displayDownItem.textContent;
                   }
                   operator = event.target.parentElement.id;
-                  displayUpItem.textContent = displayDownItem.textContent + operatorToSign(operator);
+                  displayUpItem.textContent = firstNumber + operatorToSign(operator);
                   //clearDisplayDown();
 
                   console.log("event: 1");
@@ -212,4 +226,42 @@ buttons.addEventListener("click", (event) => {
       else if (event.target.parentElement.id == 'AC') {
             clearAll();
       }
+      else if (event.target.parentElement.classList.contains("operation") 
+            && event.target.parentElement.id == 'equal') {
+                  console.log("event: 3a");
+                  console.log(`displayDown: ${displayDown}`);
+                  console.log(`firstNumber: ${firstNumber}`);
+                  console.log(`secondNumber: ${secondNumber}`);
+                  console.log(`operator: ${operator}`);
+                  console.log(`isOperatorAgain: ${isOperatorAgain}`);
+                  if (firstNumber && secondNumber) {
+                        console.log("event: 3b");
+                        whenEqual();
+                  } else if (firstNumber && !secondNumber) {
+                        if (displayDown) {
+                              console.log("event: 3c");
+                              secondNumber = displayDown;
+                              whenEqual();
+                        }
+                  }
+      }
+      else if (event.target.parentElement.id == "percentage") {
+            console.log("event: 4");
+            console.log(`displayDown: ${displayDown}`);
+            console.log(`firstNumber: ${firstNumber}`);
+            console.log(`secondNumber: ${secondNumber}`);
+            console.log(`operator: ${operator}`);
+            console.log(`isOperatorAgain: ${isOperatorAgain}`);
+            displayDown = precision(parseFloat(displayDownItem.textContent)/100, 12);
+            displayDownItem.textContent = displayDown;
+      }
+      else if (event.target.parentElement.id == "plus-minus") {
+            // TODO
+            console.log("event 5");
+      }
+      else if (event.target.parentElement.id == "dot") {
+            // TODO
+            console.log("event 6");
+      }
+
 })
