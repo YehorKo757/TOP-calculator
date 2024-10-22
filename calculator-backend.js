@@ -125,7 +125,11 @@ function whenEqual() {
       firstNumber = "";
       secondNumber = "";
       operator = "";
-      dotButton.disabled = false;
+      if (!displayDownItem.textContent.includes(".")) {
+            dotButton.disabled = false;
+      } else {
+            dotButton.disabled = true;
+      }
 }
 
 let buttons = document.querySelector(".buttons");
@@ -142,7 +146,11 @@ buttons.addEventListener("click", (event) => {
                   populateDisplayDown(buttonValue);
                   isOperatorBefore = false;
             }
-            
+            if (!displayDownItem.textContent.includes(".")) {
+                  dotButton.disabled = false;
+            } else {
+                  dotButton.disabled = true;
+            }
       } 
       // This one to make "back" button work when clicking on image as well. Image is child of button, that is child of div with target class.
       else if (event.target.parentElement.id == "back" 
@@ -158,6 +166,11 @@ buttons.addEventListener("click", (event) => {
       
       else if (event.target.parentElement.classList.contains("operation") 
             && event.target.parentElement.id !== 'equal') {
+            if (!displayDownItem.textContent.includes(".")) {
+                  dotButton.disabled = false;
+            } else {
+                  dotButton.disabled = true;
+            }
             if (firstNumber == "") {
                   isOperatorBefore = true;
                   if (displayDownItem.textContent == "") {
